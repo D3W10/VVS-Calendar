@@ -1,6 +1,7 @@
 package com.example.meetings.discover;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
@@ -37,6 +38,7 @@ public class AgendaLxProvider implements EventProvider {
 
     private final RestClient http;
 
+    @Autowired
     public AgendaLxProvider() {
         this(RestClient.builder()
                 .baseUrl("https://www.agendalx.pt/wp-json/agendalx/v1")
