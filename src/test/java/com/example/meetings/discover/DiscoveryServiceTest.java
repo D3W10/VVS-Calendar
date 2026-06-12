@@ -57,6 +57,21 @@ class DiscoveryServiceTest {
         assertThat(service.search("talk")).containsExactly(first, differentSource);
     }
 
+    @Test
+    void searchFallsBackToSourceAndExternalIdWhenUrlIsBlank() {
+        EventProvider provider = mock(EventProvider.class);
+        DiscoveredEvent first = event("agenda", "1", "First", "", "2026-07-01T18:00:00Z");
+        DiscoveredEvent second = event("agenda", "2", "Second", "", "2026-07-01T19:00:00Z");
+        DiscoveredEvent duplicate = event("agenda", "1", "Duplicate", "", "2026-07-01T20:00:00Z");
+
+        when(provider.isConfigured()).thenReturn(true);
+        when(provider.search("talk")).thenReturn(List.of(first, second, duplicate));
+
+        DiscoveryService service = new DiscoveryService(List.of(provider));
+
+        assertThat(service.search("talk")).containsExactly(first, second);
+    }
+
     private static DiscoveredEvent event(String source, String externalId, String title, String url, String start) {
         return new DiscoveredEvent(source, externalId, title, "", Instant.parse(start), null, url, "Venue");
     }

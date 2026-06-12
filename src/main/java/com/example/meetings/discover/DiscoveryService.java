@@ -28,7 +28,9 @@ public class DiscoveryService {
             if (!p.isConfigured()) continue;
             for (DiscoveredEvent e : p.search(query)) {
                 // URL is the most reliable cross-provider dedup key; fall back to source+id when missing.
-                String key = e.url() != null ? e.url() : e.source() + ":" + e.externalId();
+                String key = e.url() != null && !e.url().isBlank()
+                        ? e.url()
+                        : e.source() + ":" + e.externalId();
                 if (seenUrls.add(key)) merged.add(e);
             }
         }
